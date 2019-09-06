@@ -1,28 +1,38 @@
 package numeronym
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 	"unicode"
 )
 
 // FromString will create a numeronym from the given string
-func FromString(s string) string {
-	if len(s) < 3 {
-		return s
-	}
-	s = trim(s)
-	s = strings.ToLower(s)
-	return fmt.Sprintf("%s%d%s", string(s[0]), len(s)-2, string(s[len(s)-1]))
-}
+func FromString(str string) string {
+	var last rune
+	var setFirst bool
+	var count int
 
-func trim(str string) string {
+	str = strings.ToLower(str)
+
 	var b strings.Builder
-	b.Grow(len(str))
+
 	for _, ch := range str {
-		if !unicode.IsSpace(ch) {
-			b.WriteRune(ch)
+		if unicode.IsLetter(ch) {
+			if setFirst == false {
+				setFirst = true
+				b.WriteRune(ch)
+			}
+			last = ch
+			count++
 		}
 	}
+
+	if count < 3 {
+		return str
+	}
+
+	b.WriteString(strconv.Itoa(count - 2))
+	b.WriteRune(last)
+
 	return b.String()
 }
