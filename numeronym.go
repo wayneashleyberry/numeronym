@@ -12,19 +12,20 @@ func FromString(str string) string {
 	var setFirst bool
 	var count int
 
-	str = strings.ToLower(str)
-
 	var b strings.Builder
 
 	for _, ch := range str {
-		if unicode.IsLetter(ch) {
-			if setFirst == false {
-				setFirst = true
-				b.WriteRune(ch)
-			}
-			last = ch
-			count++
+		if !unicode.IsLetter(ch) {
+			continue
 		}
+
+		if setFirst == false {
+			setFirst = true
+			b.WriteRune(unicode.ToLower(ch))
+		}
+
+		last = ch
+		count++
 	}
 
 	if count < 3 {
